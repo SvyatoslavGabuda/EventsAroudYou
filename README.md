@@ -13,7 +13,7 @@ The backend has been developed using Java and the Spring Boot framework. The mai
 - Lombok: A Java library that simplifies code writing by reducing verbosity.
 - JavaFaker: A Java library for generating fake data (e.g., for testing or demo purposes).
 - ModelMapper: A Java library that simplifies object mapping between different data structures.
-- JJWT: A Java library for handling JSON Web Tokens (JWT).
+- JWT: A Java library for handling JSON Web Tokens (JWT).
 
 ## Project Setup
 
