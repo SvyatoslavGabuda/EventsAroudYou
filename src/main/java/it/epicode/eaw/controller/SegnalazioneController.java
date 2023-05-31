@@ -1,6 +1,8 @@
 package it.epicode.eaw.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +34,12 @@ public class SegnalazioneController {
 
 		return new ResponseEntity<Segnalazione>(sSer.save(segnalazione,id_u,id_luogo), HttpStatus.CREATED);
 	}
+	@PutMapping("/stato/{id}")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public ResponseEntity<Segnalazione> cambiaStatoSegnalazione(@PathVariable Long id) {
+		
+		return new ResponseEntity<Segnalazione>(sSer.cambiaStatoSegnalazione(id), HttpStatus.OK);
+	}
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
@@ -60,6 +68,11 @@ public class SegnalazioneController {
 	public ResponseEntity<List<Segnalazione>> getAllSegnalazioni() {
 		List<Segnalazione> segnalazioni = sSer.findAll();
 		return new ResponseEntity<>(segnalazioni, HttpStatus.OK);
+	}
+	@GetMapping("/archiviato/{arc}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Page<Segnalazione>> getSegnalazioniByStato(Pageable pag,@PathVariable boolean arc) {		
+		return new ResponseEntity<>(sSer.findByStato(pag, arc), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")

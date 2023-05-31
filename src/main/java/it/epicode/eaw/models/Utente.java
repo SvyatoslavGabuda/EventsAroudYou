@@ -48,15 +48,15 @@ public class Utente {
 	
 	private String urlImmagineProfilo;
 	
-	@OneToMany(mappedBy = "creatore",fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "creatore",fetch = FetchType.LAZY)
 	@JsonIgnoreProperties(value = {"creatore"})
     private List<Evento> eventiCreati = new ArrayList<Evento>();
     
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JsonIgnoreProperties(value = "likeDaUtenti")
-    private List<LuogoDiInteresse> likes = new ArrayList<LuogoDiInteresse>() ;
+	@ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@JsonIgnoreProperties(value = {"likeDaUtenti","creatore","commenti","segnalazioni","indirizzzo"})
+    private Set<LuogoDiInteresse> likes = new HashSet<LuogoDiInteresse>() ;
    
-    @OneToMany(mappedBy = "utente",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "utente",fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = "utente")
     private List<Commento> commenti = new ArrayList<Commento>();
     

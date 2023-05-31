@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -34,10 +35,12 @@ public class Commento {
 	private String contenuto;
 	private int raiting;
 	private LocalDateTime dataCommento;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JsonIgnoreProperties(value = {"commenti","eventiCreati","likeDaUtenti"})
+	@JsonIgnoreProperties(value = {"commenti","eventiCreati","likes","segnalazioni","roles","password"})
 	private Utente utente;
-	@ManyToOne(fetch = FetchType.EAGER)
+	
+	@ManyToOne(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.REFRESH,CascadeType.PERSIST})
 	@JsonIgnoreProperties(value = {"commenti","likeDaUtenti","creatore"})
     private LuogoDiInteresse luogoCommentato;
 	

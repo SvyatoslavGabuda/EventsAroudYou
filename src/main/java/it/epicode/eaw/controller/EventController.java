@@ -35,12 +35,23 @@ import it.epicode.eaw.service.EventoService;
 public class EventController {
 	@Autowired
 	EventoService eSer;
-// Get Event By ID
-	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+// Get Event By ID open
+	@GetMapping("/info/{id}")
 	public ResponseEntity<Evento> trovaEventobyId(@PathVariable Long id) {
 		return new ResponseEntity<Evento>(eSer.findById(id), HttpStatus.OK);
 
+	}
+// Get only sponsored Event open to all
+	@GetMapping("/sponsored")
+	public ResponseEntity<Page<Evento>> findAllSponsoredEvent(Pageable pag) {
+		Page<Evento> sponsoredEvents = eSer.findAllSponsoredEvent(pag);
+		return new ResponseEntity<>(sponsoredEvents, HttpStatus.OK);
+	}
+// Get only sponsored Event open to all
+	@GetMapping("/sponsored/{citta}")
+	public ResponseEntity<Page<Evento>> findAllSponsoredEventByCity(Pageable pag,@PathVariable String citta) {
+		Page<Evento> sponsoredEvents = eSer.findAllSponsoredByCitta(pag,citta);
+		return new ResponseEntity<>(sponsoredEvents, HttpStatus.OK);
 	}
 // Get all Event
 	@GetMapping()
@@ -49,11 +60,12 @@ public class EventController {
 		return new ResponseEntity<List<Evento>>(eSer.findAllEvento(), HttpStatus.OK);
 
 	}
-// Get only sponsored Event open to all
-	@GetMapping("/sponsored")
-	public ResponseEntity<Page<Evento>> findAllSponsoredEvent(Pageable pag) {
-		Page<Evento> sponsoredEvents = eSer.findAllSponsoredEvent(pag);
-		return new ResponseEntity<>(sponsoredEvents, HttpStatus.OK);
+// Get all Event Bloccati
+	@GetMapping("/bloccati")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Page<Evento>> trovaEventiBloccati(Pageable pag) {
+		return new ResponseEntity<Page<Evento>>(eSer.findAllEventiBloccati(pag), HttpStatus.OK);
+		
 	}
 // Get Event By Citta or Provincia
 	@GetMapping("/search/citta")
@@ -120,6 +132,12 @@ public class EventController {
 	public ResponseEntity<?> likeDaUtente(@PathVariable Long id_user, @PathVariable Long id_evento) {
 		return new ResponseEntity<Evento>(eSer.likeDaUtente(id_user, id_evento), HttpStatus.OK);
 	}
+// blocca/sblocca evento
+	@PutMapping("/blocc/{id_evento}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<?> bloccaEvento(@PathVariable Long id_evento) {
+		return new ResponseEntity<Evento>(eSer.bloccaEvento( id_evento), HttpStatus.OK);
+	}
 // sponsorizza l'evento
 	@PutMapping("/sponsor/{id_evento}")
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -127,17 +145,17 @@ public class EventController {
 		return new ResponseEntity<Evento>(eSer.sponsorizzaEvento(id_evento), HttpStatus.OK);
 	}
 // ---------------------------------------
-	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-	@ResponseBody
-	public ResponseEntity<?> updateEvento(@RequestBody Evento f) {
-		return new ResponseEntity<Evento>(eSer.updateEvento(f), HttpStatus.OK);
-	}
+
 // crea evento senza indirizzo ne immagine
 	@PostMapping
 	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<?> postaEvento(@RequestBody EventoDto e) {
 		return new ResponseEntity<Evento>(eSer.saveEvento(e), HttpStatus.OK);
+	}
+	@PutMapping("/generali/{id_evento}")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	public ResponseEntity<?> modificaEvento(@RequestBody EventoDto e,@PathVariable Long id_evento) {
+		return new ResponseEntity<Evento>(eSer.updateEvento(e,id_evento), HttpStatus.OK);
 	}
 // aggiunge un indirizzo al evento
 	@PutMapping("/{id}")

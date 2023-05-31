@@ -52,7 +52,7 @@ public class EventoService {
 			((Evento) e).setDuration(eDto.getDuration());
 			((Evento) e).setEndDate(eDto.getEndDate());
 			((Evento) e).setStartDate(eDto.getStartDate());
-//			((Evento) e).setCreatore(eDto.getCreatore());
+
 			((Evento) e).setCreatore(u);
 			((Evento) e).setNumMaxPartecipants(eDto.getNumMaxPartecipants());
 			((Evento) e).setTipoEvento(EventType.GENERALE);
@@ -63,18 +63,49 @@ public class EventoService {
 		}
 	}
 
-	public Evento updateEvento(Evento e) {
-		return eRepo.save(e);
+	public Evento updateEvento(EventoDto eDto,Long id) {
+		Utente u = uRepo.findById(eDto.getCreatore()).get();
+		Evento e = eRepo.findById(id).get();
+		
+		e.setLat(eDto.getLat());
+		e.setLng(eDto.getLng());
+		e.setTitle(eDto.getTitle());
+		e.setSubTitle(eDto.getSubTitle());
+		e.setDescription(eDto.getDescription());
+		((Evento) e).setDuration(eDto.getDuration());
+		((Evento) e).setEndDate(eDto.getEndDate());
+		((Evento) e).setStartDate(eDto.getStartDate());
+
+		((Evento) e).setCreatore(u);
+		((Evento) e).setNumMaxPartecipants(eDto.getNumMaxPartecipants());
+		((Evento) e).setTipoEvento(EventType.GENERALE);
+		return eRepo.save(((Evento) e));
 	}
 	public Evento likeDaUtente(Long id_user,Long id_evento) {
 		Evento e = eRepo.findById(id_evento).get();
 		Utente u = uRepo.findById(id_user).get();
-		if(e.getLikeDaUtenti().contains(u)) {
+		if(e.getLikeDaUtenti().contains(u) && u.getLikes().contains(e)) {
+			System.out.println("utente rimosso da evento " + e.getLikeDaUtenti().remove(u));
 			e.getLikeDaUtenti().remove(u);
+//			e.getLikeDaUtenti().forEach(l->System.out.println(l.getIdUtente()));
+			System.out.println("evento rimosso da utente " + u.getLikes().remove((LuogoDiInteresse)e));
+			u.getLikes().remove((LuogoDiInteresse)e);
+
+//			u.getLikes().forEach(p->System.out.println(p.getIdLuogo()));
+			System.out.println("ho rimosso il like");
 		}else {
-			
+			System.out.println("utente ADD da evento " + e.getLikeDaUtenti().add(u));
+
 			e.getLikeDaUtenti().add(u);
+//			e.getLikeDaUtenti().forEach(l->System.out.println(l.getIdUtente()));
+			System.out.println("evento ADD da utente " + u.getLikes().add(e));
+			u.getLikes().add(e);
+//			u.getLikes().forEach(p->System.out.println(p.getIdLuogo()));
+
+			System.out.println("ho AGGIUNTO il like");
+
 		}
+		uRepo.save(u);
 		eRepo.save(e);
 		return e;
 	}
@@ -86,11 +117,17 @@ public class EventoService {
 	}
 
 	public Evento updateEventoIndirizzo(Long id_evento, Indirizzo i) {
-//		Evento e = eRepo.findById(id_evento).get();
+
+		
 		Evento e = eRepo.findById(id_evento)
 				.orElseThrow(() -> new MyAPIException(HttpStatus.NOT_FOUND, "Evento non trovato"));
+		Indirizzo r = new Indirizzo();
+		if(e.getIndirizzzo() != null) {
+			
+			 r =iRepo.findById(e.getIndirizzzo().getId_indirizzo()).get();
+			 r.getLuogoDiInteresse().remove(e);
+		}
 		i.getLuogoDiInteresse().add(e);
-
 		Indirizzo is = iRepo.save(i);
 		e.setIndirizzzo(is);
 		return eRepo.save(e);
@@ -113,7 +150,21 @@ public class EventoService {
 			throw new MyAPIException(HttpStatus.NOT_FOUND, "Evento non trovato");
 		}
 	}
-
+	public Evento bloccaEvento (Long id) {
+		Evento e = eRepo.findById(id).get();
+		if(e.isBloccato()) {
+			e.setBloccato(false);
+		}else {
+			e.setBloccato(true);
+		}
+		return eRepo.save(e);
+	}
+public Page<Evento> findAllSponsoredByCitta(Pageable pag, String city){
+	return eRepo.findByCittaOrProvinciaAndSponsored(pag,city);
+}
+    public Page<Evento> findAllEventiBloccati(Pageable pag){
+    	return eRepo.findByBloccati(pag, true);
+    }
 	public Evento findById(Long id) {
 		return eRepo.findById(id).orElseThrow(() -> new MyAPIException(HttpStatus.NOT_FOUND, "Evento non trovato"));
 	}

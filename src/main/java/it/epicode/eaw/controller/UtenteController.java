@@ -28,7 +28,7 @@ public class UtenteController {
 	UtenteService uSer;
 
 	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Utente> trovaEventobyId(@PathVariable Long id) {
 		return new ResponseEntity<Utente>(uSer.findById(id), HttpStatus.OK);
 

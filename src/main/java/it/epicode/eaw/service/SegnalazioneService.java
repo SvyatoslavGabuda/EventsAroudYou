@@ -77,6 +77,23 @@ public class SegnalazioneService {
 		return sRepo.findById(id);
 	}
 
+	public Segnalazione cambiaStatoSegnalazione(Long id) {
+		Segnalazione s = sRepo.findById(id).get();
+		if (s.isArchiviato()) {
+			System.out.println("ture");
+			s.setArchiviato(false);
+		} else {
+			System.out.println("false");
+			
+			s.setArchiviato(true);
+			
+		}
+		return sRepo.save(s);
+	}
+
+	public Page<Segnalazione> findByStato(Pageable pag,boolean archiviato) {
+		return sRepo.findByArchiviato(pag,archiviato);
+	}
 	public List<Segnalazione> findAll() {
 		return sRepo.findAll();
 	}

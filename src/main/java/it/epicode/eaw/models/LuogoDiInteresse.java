@@ -43,15 +43,19 @@ public abstract class LuogoDiInteresse {
 	private String urlImage;
 	private int raiting;
 	private boolean bloccato;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JsonIgnoreProperties(value = "luogoDiInteresse")
 	private Indirizzo indirizzzo;
-	@OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+	
+	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JsonIgnoreProperties(value = {"luogoCommentato"})
-	private List<Commento> commenti = new ArrayList<Commento>();
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JsonIgnoreProperties(value = {"likes","commenti","eventiCreati"})
+	private Set<Commento> commenti = new HashSet<Commento>();
+	
+	@ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.MERGE,CascadeType.REFRESH,CascadeType.PERSIST})
+	@JsonIgnoreProperties(value = {"likes","commenti","eventiCreati","roles","segnalazioni"})
 	private Set<Utente> likeDaUtenti = new HashSet<Utente>();
+	
 	@OneToMany(mappedBy="cosaSegnalata",cascade = CascadeType.ALL)
     @JsonIgnore    
     private Set<Segnalazione> segnalazioni = new HashSet<Segnalazione>();

@@ -22,15 +22,20 @@ public interface EventoRepo extends JpaRepository<Evento, Long> {
 
 	Page<Evento> findByTipoEvento(Pageable pag, EventType tipoEvento);
 
+	@Query("SELECT e FROM Evento e WHERE e.sponsored = :sponsored AND e.bloccato = false")
 	Page<Evento> findBySponsored(Pageable pag, boolean sponsored);
+	
+	@Query("SELECT e FROM Evento e WHERE (LOWER(e.indirizzzo.citta) LIKE %:cittaProvincia% "
+			+ "OR  LOWER(e.indirizzzo.provincia) LIKE %:cittaProvincia%) AND e.bloccato = false and e.sponsored = true")
+	Page<Evento> findByCittaOrProvinciaAndSponsored(Pageable pag, String cittaProvincia);
 
 	Page<Evento> findByTipoEventoAndStartDate(Pageable pag, EventType tipoEvento, LocalDateTime startDate);
 
 	@Query("SELECT e FROM Evento e WHERE  e.bloccato = :val")
 	Page<Evento> findByBloccati(Pageable pag, boolean val);
 
-	@Query("SELECT e FROM Evento e WHERE LOWER(e.indirizzzo.citta) LIKE %:cittaProvincia% "
-			+ "OR  LOWER(e.indirizzzo.provincia) LIKE %:cittaProvincia% AND e.bloccato = false")
+	@Query("SELECT e FROM Evento e WHERE (LOWER(e.indirizzzo.citta) LIKE %:cittaProvincia% "
+			+ "OR  LOWER(e.indirizzzo.provincia) LIKE %:cittaProvincia%) AND e.bloccato = false")
 	Page<Evento> findByCittaOrProvincia(Pageable pag, String cittaProvincia);
 
 	@Query("SELECT e FROM Evento e WHERE(LOWER(e.indirizzzo.citta) LIKE %:cittaProvincia% "
@@ -39,21 +44,17 @@ public interface EventoRepo extends JpaRepository<Evento, Long> {
 	Page<Evento> findBydCittaOrProvinciaAndStartDateBetween(Pageable pag, String cittaProvincia,
 			LocalDateTime startDate, LocalDateTime endDate);
 
-	@Query("SELECT e FROM Evento e WHERE (LOWER(e.title) LIKE %:titolo% " +
-	"AND (LOWER(e.indirizzzo.citta) LIKE %:cittaProvincia% "
+	@Query("SELECT e FROM Evento e WHERE (LOWER(e.title) LIKE %:titolo% "
+			+ "AND (LOWER(e.indirizzzo.citta) LIKE %:cittaProvincia% "
 			+ "OR LOWER(e.indirizzzo.provincia) LIKE %:cittaProvincia%)) "
 			+ "AND e.bloccato = false AND e.startDate BETWEEN :startDate AND :endDate")
 	Page<Evento> findByTitoloAndCittaOrProvinciaAndStartDateBetween(Pageable pag, String titolo, String cittaProvincia,
 			LocalDateTime startDate, LocalDateTime endDate);
 
-	
 	@Query("SELECT e FROM Evento e WHERE LOWER(e.title) LIKE %:titolo% "
-	        + "AND (LOWER(e.indirizzzo.citta) LIKE %:cittaProvincia% "
-	        + "OR LOWER(e.indirizzzo.provincia) LIKE %:cittaProvincia%) "
-	        + "AND e.bloccato = false")
+			+ "AND (LOWER(e.indirizzzo.citta) LIKE %:cittaProvincia% "
+			+ "OR LOWER(e.indirizzzo.provincia) LIKE %:cittaProvincia%) " + "AND e.bloccato = false")
 	Page<Evento> findByTitoloAndCittaOrProvincia(Pageable pag, String titolo, String cittaProvincia);
-
-
 
 	@Query("SELECT e FROM Evento e WHERE e.tipoEvento = :tipoEvento "
 			+ "AND (e.indirizzzo.citta LIKE %:cittaProvincia% " + "OR e.indirizzzo.provincia LIKE %:cittaProvincia%) "

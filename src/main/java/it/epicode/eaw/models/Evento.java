@@ -23,7 +23,7 @@ public class Evento extends LuogoDiInteresse {
 	private boolean sponsored;
 	private EventType tipoEvento;
 	@ManyToOne
-	@JsonIgnoreProperties(value = "eventiCreati")
+	@JsonIgnoreProperties(value = {"eventiCreati","likes","commenti","segnalazioni","roles"})
 	private Utente creatore;
 
 	@Override

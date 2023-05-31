@@ -40,6 +40,9 @@ public class CommentoService {
 		return cs;
 	}
 	public String deleteCommento(long id) {
+		Commento c = cRepo.findById(id).get();
+		LuogoDiInteresse l = lRepo.findById(c.getLuogoCommentato().getIdLuogo()).get();
+		l.getCommenti().remove(c);
 		cRepo.deleteById(id);
 		return"commento Eliminato";
 	}
