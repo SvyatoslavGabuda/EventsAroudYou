@@ -1,6 +1,7 @@
 # Events Around You - Backend
 
 This is the repository for the backend of the "Events Around You" application, an application for managing events in the vicinity.
+<a href="https://github.com/SvyatoslavGabuda/events-around-you"><strong>Front-ed Repository »</strong></a>
 
 ## Technologies Used
 
