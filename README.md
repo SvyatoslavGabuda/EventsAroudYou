@@ -6,14 +6,12 @@ This is the repository for the backend of the "Events Around You" application, a
 
 The backend has been developed using Java and the Spring Boot framework. The main technologies used include:
 
-- Spring Boot: A Java framework for creating web applications and RESTful APIs.
-- Spring Data JPA: A framework that simplifies database interaction through the Object-Relational Mapping (ORM) paradigm.
-- Spring Security: A Spring module that handles authentication and authorization within the application.
-- PostgreSQL: An open-source relational database management system.
-- Lombok: A Java library that simplifies code writing by reducing verbosity.
-- JavaFaker: A Java library for generating fake data (e.g., for testing or demo purposes).
-- ModelMapper: A Java library that simplifies object mapping between different data structures.
-- JWT: A Java library for handling JSON Web Tokens (JWT).
+- Spring Boot
+- Spring Data JPA
+- Spring Security
+- PostgreSQL
+- Lombok.
+- JWT
 
 ## Project Setup
 
