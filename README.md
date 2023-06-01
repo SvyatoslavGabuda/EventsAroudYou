@@ -27,4 +27,3 @@ To set up and run the backend project, follow these steps:
 
 The backend application will be started and will be available at [http://localhost:8080](http://localhost:8080).
 
-Please customize the sections above with the relevant information for your project. Make sure to provide clear instructions for setting up and running the backend.
