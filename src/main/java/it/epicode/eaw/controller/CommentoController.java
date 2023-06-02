@@ -44,7 +44,7 @@ public class CommentoController {
 	}
 
 	@DeleteMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
+	@PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
 	public ResponseEntity<String> eliminaEventoByID(@PathVariable Long id) {
 		return new ResponseEntity<String>(cSer.deleteCommento(id), HttpStatus.OK);
 
