@@ -14,6 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventoDto {
+	//Classe necessaria per creare eventi o modificarne i dati base
 
 	private Double lat;
 	private Double lng;
