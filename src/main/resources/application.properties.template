@@ -1,0 +1,17 @@
+spring.datasource.driver-class-name=org.postgresql.Driver
+spring.datasource.url=jdbc:postgresql://localhost:5432/name of the db
+spring.datasource.username=your postgres usersername
+spring.datasource.password= your postgres password
+
+
+
+
+
+# create - create-drop - update - none
+spring.jpa.hibernate.ddl-auto= update
+server.port=8081
+
+app.jwt-secret=jwt-secret
+app.jwt-expiration-milliseconds=604800000
+
+STRIPE_SECRET_KEY=stripe private key
